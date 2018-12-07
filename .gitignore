@@ -2,3 +2,4 @@
 .ipynb_checkpoints
 .idea
 src/.vector_cache/
+data/*
