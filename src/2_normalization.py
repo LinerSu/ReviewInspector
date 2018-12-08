@@ -23,23 +23,23 @@ def tokenizer (sentence):
     return tk
 
 def text_normalization():
-	TEXT = torchtext.data.Field(sequential=True, tokenize=tokenizer, lower=True)
-	LABEL = torchtext.data.LabelField(sequential=False, dtype=torch.float)
-	fields = [(None, None), (None, None), ('label', LABEL), (None, None), ('text', TEXT)]
+    TEXT = torchtext.data.Field(sequential=True, tokenize=tokenizer, lower=True)
+    LABEL = torchtext.data.LabelField(sequential=False, dtype=torch.float)
+    fields = [(None, None), (None, None), ('label', LABEL), (None, None), ('text', TEXT)]
 
-	# Generate dataset for torchtext
-	train_data, test_data = torchtext.data.TabularDataset.splits(path='../data/input', 
-		train='train', test='test', format = 'tsv', fields=fields)
+    # Generate dataset for torchtext
+    train_data, test_data = torchtext.data.TabularDataset.splits(path='../data/input',
+    train='train', test='test', format = 'tsv', fields=fields)
 
-	train_data, val_data = train_data.split(random_state=random.seed(SEED))
+    train_data, val_data = train_data.split(random_state=random.seed(SEED))
 
-	# Build vocab
-	TEXT.build_vocab(train_data, vectors="glove.6B.100d") #
-	LABEL.build_vocab(train_data)
+    # Build vocab
+    TEXT.build_vocab(train_data, vectors="glove.6B.100d") #
+    LABEL.build_vocab(train_data)
 
-	# Create batch and iterate dataset
-	BATCH_SIZE = [64, 64, 64]
-	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-	train_iter, val_iter, test_iter = torchtext.data.Iterator.splits(
-	        (train_data, val_data, test_data),
-	        batch_sizes=BATCH_SIZE, device=device)
+    # Create batch and iterate dataset
+    BATCH_SIZE = [64, 64, 64]
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    train_iter, val_iter, test_iter = torchtext.data.Iterator.splits(
+            (train_data, val_data, test_data),
+            batch_sizes=BATCH_SIZE, device=device)

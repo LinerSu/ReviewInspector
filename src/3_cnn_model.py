@@ -4,10 +4,8 @@ import torch.optim as optim
 
 
 class CNN(nn.module):
-	def __init__(self):
-		super.__init__()
+    def __init__(self):
+    super.__init__()
 
 
-	def forward(self):
-
-
+    def forward(self):
