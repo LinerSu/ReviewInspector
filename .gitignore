@@ -3,3 +3,4 @@
 .idea
 src/.vector_cache/
 data/*
+__pycache__/
