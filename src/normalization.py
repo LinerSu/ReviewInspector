@@ -36,6 +36,7 @@ def text_normalization(seed):
     # Create batch and iterate dataset
     BATCH_SIZE = [64, 64, 64]
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    print(f'The device is {device}')
 
     train_iter, val_iter, test_iter = torchtext.data.Iterator.splits(
             (train_data, val_data, test_data), sort_key=lambda x: len(x.text),

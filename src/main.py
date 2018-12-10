@@ -33,6 +33,9 @@ torch.cuda.manual_seed(args.seed)
 EMBEDDING_DIM = 100
 HIDDEN_DIM = 256
 OUTPUT_DIM = 1
+N_LAYERS = 2
+BIDIRECTIONAL = True
+DROPOUT = 0.5
 
 data, iter, INPUT_DIM, device = text_normalization(args.seed)
 train_data, val_data, test_data = data
@@ -42,7 +45,7 @@ def selectModel(): # Model
     if args.model == "RNN":
         model = RNN(INPUT_DIM, EMBEDDING_DIM, HIDDEN_DIM, OUTPUT_DIM)
     elif args.model =="LSTM":
-        model = BiLSTM(INPUT_DIM, EMBEDDING_DIM, HIDDEN_DIM, OUTPUT_DIM, 2, True, 0.5)
+        model = BiLSTM(INPUT_DIM, EMBEDDING_DIM, HIDDEN_DIM, OUTPUT_DIM, N_LAYERS, BIDIRECTIONAL, DROPOUT)
     return model
 
 def binary_accuracy(preds, y):
