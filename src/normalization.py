@@ -15,7 +15,7 @@ def tokenizer (sentence):
         tk[i] = ps.stem(tk[i]) # Stemming
     return tk
 
-def text_normalization(seed):
+def text_normalization(seed, batch_size):
     TEXT = torchtext.data.Field(sequential=True, tokenize='spacy', lower=True)
     LABEL = torchtext.data.LabelField(sequential=False, dtype=torch.float)
     fields = [(None, None), (None, None), ('label', LABEL), (None, None), ('text', TEXT)]
@@ -34,7 +34,7 @@ def text_normalization(seed):
 
 
     # Create batch and iterate dataset
-    BATCH_SIZE = [64, 64, 64]
+    BATCH_SIZE = [batch_size, batch_size, batch_size]
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f'The device is {device}')
 

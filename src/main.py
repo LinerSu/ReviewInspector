@@ -24,6 +24,14 @@ parser.add_argument('--epochs', type=int, default=30, metavar='N',
                     help='number of epochs to train (default: 30)')
 parser.add_argument('--cuda', action='store_true',
                     help='use CUDA')
+parser.add_argument('--batch_size', type=int, default=64,
+                    help='batch size of training input')
+parser.add_argument('--print_every', type=int, default=50,
+                    help='every n iterations loss is printed')
+parser.add_argument('--lr', type=float, default=1e-3,
+                    help='learning rate')
+parser.add_argument('--optimizer', type=str, default='SGD',
+                    help='type of optimizer (SGD | Adam)')
 
 args = parser.parse_args()
 # parser.print_help()
@@ -37,7 +45,7 @@ N_LAYERS = 2
 BIDIRECTIONAL = True
 DROPOUT = 0.5
 
-data, iter, INPUT_DIM, device = text_normalization(args.seed)
+data, iter, INPUT_DIM, device = text_normalization(args.seed, args.batch_size)
 train_data, val_data, test_data = data
 train_iter, val_iter, test_iter = iter
 
@@ -66,7 +74,7 @@ def train(model, iterator, optimizer, criterion):
 
     model.train()
 
-    for batch in iterator:
+    for i, batch in enumerate(iterator):
 
         optimizer.zero_grad()
 
@@ -82,6 +90,9 @@ def train(model, iterator, optimizer, criterion):
 
         epoch_loss += loss.item()
         epoch_acc += acc.item()
+
+        if i % args.print_every == 0:
+            print('[%d/%d] Loss: %.3f Acc: %.2f' % (i, len(iterator), loss.item(), acc.item()))
 
     return epoch_loss / len(iterator), epoch_acc / len(iterator)
 
@@ -109,9 +120,14 @@ def evaluate(model, iterator, criterion):
 
 def run(model):
     criterion = nn.BCEWithLogitsLoss()
-    optimizer = optim.SGD(model.parameters(), lr=0.1)
+    if args.optimizer == 'SGD':
+        optimizer = optim.SGD(model.parameters(), lr=args.lr)
+    elif args.optimizer == 'Adam':
+        optimizer = optim.Adam(model.parameters(), lr=args.lr)
     model = model.to(device)
     criterion = criterion.to(device)
+
+    print(model)
 
     N_EPOCHS = 5
 
