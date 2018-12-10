@@ -109,7 +109,7 @@ def evaluate(model, iterator, criterion):
 
 def run(model):
     criterion = nn.BCEWithLogitsLoss()
-    optimizer = optim.SGD(model.parameters(), lr=1e-3)
+    optimizer = optim.SGD(model.parameters(), lr=0.1)
     model = model.to(device)
     criterion = criterion.to(device)
 

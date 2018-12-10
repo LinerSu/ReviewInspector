@@ -16,7 +16,7 @@ def tokenizer (sentence):
     return tk
 
 def text_normalization(seed):
-    TEXT = torchtext.data.Field(sequential=True, tokenize=tokenizer, lower=True)
+    TEXT = torchtext.data.Field(sequential=True, tokenize='spacy', lower=True)
     LABEL = torchtext.data.LabelField(sequential=False, dtype=torch.float)
     fields = [(None, None), (None, None), ('label', LABEL), (None, None), ('text', TEXT)]
 
