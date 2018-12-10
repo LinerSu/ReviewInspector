@@ -34,23 +34,9 @@ def regroup_split_data(data_folder):
     sc = content[:, 3].reshape(content.shape[0], 1)
     dt = np.array([data['user_id'], data['prod_id'], data['label'], data['rating']])
     dt = dt.T
-    rst = np.hstack((dt, content))
-    a = False
-    b = False
-    for i in range(rst.shape[0]):
-        if float(rst[i][2]) < 0:
-            if a:
-                false_data = np.concatenate((false_data, np.array([rst[i]])))
-
-            else:
-                false_data = np.array([rst[i]])
-                a = True
-        else:
-            if b:
-                true_data = np.concatenate((true_data, np.array([rst[i]])))
-            else:
-                true_data = np.array([rst[i]])
-                b = True
+    rst = np.hstack((dt, sc))
+    rst = rst[rst[:,2].argsort()]
+    false_data, true_data = np.split(rst, [np.where(rst[:,2]=='1.0')[0][0]])
 
     np.random.shuffle(false_data)
     np.random.shuffle(true_data)
