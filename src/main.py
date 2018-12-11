@@ -32,7 +32,8 @@ parser.add_argument('--lr', type=float, default=1e-3,
                     help='learning rate')
 parser.add_argument('--optimizer', type=str, default='SGD',
                     help='type of optimizer (SGD | Adam)')
-
+parser.add_argument('--momentum', type=float, default=0.7)
+parser.add_argument('--weight_decay', type=float, default=5e-4)
 args = parser.parse_args()
 # parser.print_help()
 torch.manual_seed(args.seed)
@@ -121,17 +122,20 @@ def evaluate(model, iterator, criterion):
 def run(model):
     criterion = nn.BCEWithLogitsLoss()
     if args.optimizer == 'SGD':
-        optimizer = optim.SGD(model.parameters(), lr=args.lr)
+        optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
     elif args.optimizer == 'Adam':
-        optimizer = optim.Adam(model.parameters(), lr=args.lr)
+        optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    elif args.optimizer == 'RMSprop':
+        optimizer = optim.RSMprop(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    elif args.optimizer == 'Adagrad':
+        optimizer = optim.Adagrad(model.parameters(), weight_decay=args.weight_decay)
+
     model = model.to(device)
     criterion = criterion.to(device)
 
     print(model)
 
-    N_EPOCHS = 5
-
-    for epoch in range(N_EPOCHS):
+    for epoch in range(args.epochs):
         train_loss, train_acc = train(model, train_iter, optimizer, criterion)
         valid_loss, valid_acc = evaluate(model, val_iter, criterion)
         print(f'| Epoch: {epoch+1:02} | Train Loss: {train_loss:.3f} | Train Acc: {train_acc*100:.2f}% | Val. Loss: {valid_loss:.3f} | Val. Acc: {valid_acc*100:.2f}% |')

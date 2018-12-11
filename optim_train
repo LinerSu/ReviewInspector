@@ -1,0 +1,24 @@
+MODEL=LSTM
+#LR=0.01
+MMT=0.7
+EP=25
+
+source activate yelp
+cd ~/ReviewInspector/src
+
+for LR in 1 0.1 0.01 0.001
+do
+for OP in SGD Adam RMSprop Adagrad 
+do
+for WD in 0 5e-4 
+do
+python main.py \
+--lr ${LR}  \
+--model ${MODEL}  \
+--epochs ${EP} \
+--momentum ${MMT} \
+2>&1 | tee ../output/${MODEL}_${OP}_${LR}lr_${WD}wd_${EP}ep_${MMT}momentum.report
+done
+done
+done
+

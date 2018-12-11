@@ -1,0 +1,13 @@
+MODEL=LSTM
+LR=0.1
+MMT=0.7
+EP=25
+
+source activate yelp
+cd ~/ReviewInspector/src
+
+python main.py \
+--lr ${LR}  \
+--model ${MODEL}  \
+--epochs ${EP} \
+2>&1 | tee ../output/${MODEL}_${LR}lr_${EP}ep_${MMT}momentum.report
